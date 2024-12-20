@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Blog</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            border-bottom: 2px solid black;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        nav {
+            margin: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            background: white;
+            position: relative;
+            top: 1px;
+        }
+
+        .tab.active {
+            border-bottom: 1px solid white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .article-link {
+            display: block;
+            margin: 10px 0;
+            color: black;
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .article-link:hover {
+            background: #f5f5f5;
+        }
+
+        .close-tab {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .close-tab:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Minimal Blog</h1>
+    </header>
+
+    <nav id="navigation">
+        <div class="tab active" data-tab="home">Home</div>
+        <div class="tab" data-tab="articles">Articles</div>
+        <div class="tab" data-tab="textbook">Textbook</div>
+        <div class="tab" data-tab="about">About</div>
+        <div id="dynamic-article-tab" class="tab" style="display: none">
+            <span class="tab-text"></span>
+            <span class="close-tab">×</span>
+        </div>
+    </nav>
+
+    <main>
+        <div id="home" class="tab-content active">
+            <h2>Welcome</h2>
+            <p>This is a space dedicated to exploring ideas at the intersection of mathematics, computer science, and philosophy. Here, we strip away unnecessary complexity to focus on clear thinking and precise communication. Whether you're a student, researcher, or curious mind, you'll find carefully crafted articles and resources that aim to illuminate rather than impress.</p>
+            <p>Navigate through the tabs above to explore our articles, access our free textbook materials, or learn more about this project.</p>
+        </div>
+
+        <div id="articles" class="tab-content">
+            <h2>Articles</h2>
+            <a href="#" class="article-link" data-article="article1">The Beauty of Mathematical Proofs</a>
+            <a href="#" class="article-link" data-article="article2">Understanding Recursive Thinking</a>
+            <a href="#" class="article-link" data-article="article3">The Philosophy of Computer Science</a>
+        </div>
+
+        <div id="article1" class="tab-content">
+            <h2>The Beauty of Mathematical Proofs</h2>
+            <p>Mathematics, at its core, is about discovering truth through logical reasoning...</p>
+        </div>
+
+        <div id="article2" class="tab-content">
+            <h2>Understanding Recursive Thinking</h2>
+            <p>To understand recursion, one must first understand recursion...</p>
+        </div>
+
+        <div id="article3" class="tab-content">
+            <h2>The Philosophy of Computer Science</h2>
+            <p>Computer science sits at a unique intersection of mathematics, engineering, and philosophy...</p>
+        </div>
+
+        <div id="textbook" class="tab-content">
+            <h2>Textbook</h2>
+            <p>Our open-source textbook materials are currently in development. Check back soon!</p>
+        </div>
+
+        <div id="about" class="tab-content">
+            <h2>About</h2>
+            <p>This blog is a personal project dedicated to sharing insights and understanding in mathematics and computer science.</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navigation = document.getElementById('navigation');
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            const articleLinks = document.querySelectorAll('.article-link');
+            const dynamicTab = document.getElementById('dynamic-article-tab');
+
+            function showTab(tabId) {
+                contents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                document.getElementById(tabId).classList.add('active');
+                document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    if (this !== dynamicTab) {
+                        showTab(this.dataset.tab);
+                    }
+                });
+            });
+
+            // Handle dynamic article tab close
+            dynamicTab.querySelector('.close-tab').addEventListener('click', function(e) {
+                e.stopPropagation();
+                dynamicTab.style.display = 'none';
+                showTab('articles');
+            });
+
+            // Handle article tab clicks
+            dynamicTab.addEventListener('click', function() {
+                showTab(this.dataset.tab);
+            });
+
+            articleLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const articleId = this.dataset.article;
+
+                    // Update dynamic tab
+                    dynamicTab.style.display = 'inline-block';
+                    dynamicTab.dataset.tab = articleId;
+                    dynamicTab.querySelector('.tab-text').textContent = this.textContent;
+
+                    showTab(articleId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
